@@ -7,9 +7,17 @@ let url =
 request(url, (error, response, html) => {
   if (!error && response.statusCode === 200) {
     const $ = cheerio.load(html);
-    const table = $("table").last();
-    fs.writeFile("data.html", table.html(), err => {
-      if (err) return new Error("File ni chali");
+    const rows = $("a").each((i, el) => {
+      let anchor = $(el).attr("href") + "," + $(el).text() + "\n";
+      fs.appendFile("data.txt", anchor, err => {
+        if (err) return new Error("file fucked up");
+      });
     });
   }
 });
+
+// fs.readFile("data.json", (err, res) => {
+//   if (err) return new Error("File fucked up");
+//   jsonData = JSON.parse(res);
+
+// });
